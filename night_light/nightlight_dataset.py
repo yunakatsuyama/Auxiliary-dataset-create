@@ -11,7 +11,7 @@ eagrid = np.load('../../data_create/created_data/eagrid_dataset_test.npy')
 print(len(center_lat), len(center_lon))
 
 ntl_file = "F182010.v4/F182010.v4d_web.stable_lights.avg_vis.tif"
-
+#ntl_file = '/Users/mameyuna/MasterThesis/Auxiliary_data/night_light/F152000.v4/F152000.v4b_web.stable_lights.avg_vis.tif'
 dataset = rasterio.open(ntl_file)
 
 print(dataset.res)  # check resolution
@@ -36,17 +36,17 @@ for lat, lon in zip(center_lat, center_lon):
     )
     print(window)
     data = dataset.read(
-        1,
+        1,  # band 1 = night light intensity
         window=window,
         out_shape=(grid_size, grid_size),
         resampling=rasterio.enums.Resampling.bilinear
     )
-
+    data = np.flipud(data)   # array was top-down, but to plot, it should be bototm-up
     images.append(data)
 
 images = np.array(images)
 print(images.shape)
 
-np.save("ntl_grid_images.npy", images)
+np.save("data/ntl_grid_images_2010.npy", images)
 
 
